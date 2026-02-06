@@ -1,5 +1,5 @@
 {
-  "name": "ChilliCream Dev Container",
+  "name": "ChilliCream Backend",
   "build": {
       "dockerfile": "dockerfile",
       "context": "."
