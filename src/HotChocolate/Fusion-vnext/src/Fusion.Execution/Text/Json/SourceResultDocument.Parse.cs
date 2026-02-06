@@ -2,6 +2,8 @@ using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using HotChocolate.Buffers;
+using HotChocolate.Text.Json;
 
 namespace HotChocolate.Fusion.Text.Json;
 
@@ -82,7 +84,7 @@ public sealed partial class SourceResultDocument
             {
                 foreach (var chunk in dataChunksSpan)
                 {
-                    JsonMemory.Return(chunk);
+                    JsonMemory.Return(JsonMemoryKind.Json, chunk);
                 }
 
                 dataChunksSpan.Clear();
@@ -140,7 +142,7 @@ public sealed partial class SourceResultDocument
             {
                 foreach (var chunk in dataChunksSpan)
                 {
-                    JsonMemory.Return(chunk);
+                    JsonMemory.Return(JsonMemoryKind.Json, chunk);
                 }
 
                 dataChunksSpan.Clear();

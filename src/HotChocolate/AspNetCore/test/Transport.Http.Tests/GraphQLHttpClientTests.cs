@@ -289,7 +289,7 @@ public class GraphQLHttpClientTests : ServerTestBase
 
         const string query =
             """
-            query($traits: JSON!) {
+            query($traits: Any!) {
               heroByTraits(traits: $traits) {
                 name
               }

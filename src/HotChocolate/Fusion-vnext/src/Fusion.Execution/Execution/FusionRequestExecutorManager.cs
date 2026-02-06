@@ -581,7 +581,7 @@ internal sealed class FusionRequestExecutorManager
         public FusionSchemaDefinition Schema { get; set; } = null!;
     }
 
-    public sealed class RequestExecutorRegistration : IAsyncDisposable
+    private sealed class RequestExecutorRegistration : IAsyncDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new();
         private readonly CancellationToken _cancellationToken;
