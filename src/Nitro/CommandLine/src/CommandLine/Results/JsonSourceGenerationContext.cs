@@ -5,6 +5,7 @@ using ChilliCream.Nitro.CommandLine.Commands.Apis.Components;
 using ChilliCream.Nitro.CommandLine.Commands.Clients.Components;
 using ChilliCream.Nitro.CommandLine.Commands.Environments.Components;
 using ChilliCream.Nitro.CommandLine.Commands.Fusion.PublishCommand;
+using ChilliCream.Nitro.CommandLine.Commands.Mcp.Components;
 using ChilliCream.Nitro.CommandLine.Commands.Mocks.Components;
 using ChilliCream.Nitro.CommandLine.Commands.OpenApi.Components;
 using ChilliCream.Nitro.CommandLine.Commands.PersonalAccessTokens;
@@ -36,4 +37,6 @@ namespace ChilliCream.Nitro.CommandLine.Results;
 [JsonSerializable(typeof(PaginatedListResult<WorkspaceDetailPrompt.WorkspaceDetailPromptResult>))]
 [JsonSerializable(typeof(OpenApiCollectionDetailPrompt.OpenApiCollectionDetailPromptResult))]
 [JsonSerializable(typeof(PaginatedListResult<OpenApiCollectionDetailPrompt.OpenApiCollectionDetailPromptResult>))]
+[JsonSerializable(typeof(McpFeatureCollectionDetailPrompt.McpFeatureCollectionDetailPromptResult))]
+[JsonSerializable(typeof(PaginatedListResult<McpFeatureCollectionDetailPrompt.McpFeatureCollectionDetailPromptResult>))]
 internal partial class JsonSourceGenerationContext : JsonSerializerContext;

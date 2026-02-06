@@ -453,6 +453,7 @@ fragment WaitForApproval on WaitForApproval {
         ...InvalidGraphQLSchemaError
         ...PersistedQueryValidationError
         ...OpenApiCollectionValidationError
+        ...McpFeatureCollectionValidationError
       }
     }
     ... on ClientDeployment {
@@ -466,11 +467,17 @@ fragment WaitForApproval on WaitForApproval {
         ...InvalidGraphQLSchemaError
         ...PersistedQueryValidationError
         ...OpenApiCollectionValidationError
+        ...McpFeatureCollectionValidationError
       }
     }
     ... on OpenApiCollectionDeployment {
       errors {
         ...OpenApiCollectionValidationError
+      }
+    }
+    ... on McpFeatureCollectionDeployment {
+      errors {
+        ...McpFeatureCollectionValidationError
       }
     }
   }
@@ -511,6 +518,7 @@ fragment FusionConfigurationValidationFailed on FusionConfigurationValidationFai
     ...SchemaVersionChangeViolationError
     ...InvalidGraphQLSchemaError
     ...OpenApiCollectionValidationError
+    ...McpFeatureCollectionValidationError
   }
 }
 fragment FusionConfigurationValidationSuccess on FusionConfigurationValidationSuccess {
@@ -537,6 +545,7 @@ fragment SchemaVersionValidationFailed on SchemaVersionValidationFailed {
     ...SchemaVersionChangeViolationError
     ...OperationsAreNotAllowedError
     ...OpenApiCollectionValidationError
+    ...McpFeatureCollectionValidationError
   }
 }
 
@@ -560,6 +569,7 @@ fragment SchemaVersionPublishFailed on SchemaVersionPublishFailed {
     ...UnexpectedProcessingError
     ...ProcessingTimeoutError
     ...OpenApiCollectionValidationError
+    ...McpFeatureCollectionValidationError
   }
 }
 
@@ -771,5 +781,88 @@ fragment InvalidOpenApiCollectionArchiveError on InvalidOpenApiCollectionArchive
 }
 
 fragment OpenApiCollectionValidationArchiveError on OpenApiCollectionValidationArchiveError {
+  message
+}
+
+fragment McpFeatureCollectionNotFoundError on McpFeatureCollectionNotFoundError {
+  mcpFeatureCollectionId
+  ...Error
+}
+
+fragment McpFeatureCollectionVersionNotFoundError on McpFeatureCollectionVersionNotFoundError {
+  tag
+  message
+  mcpFeatureCollectionId
+  ...Error
+}
+
+fragment McpFeatureCollectionVersionValidationFailed on McpFeatureCollectionVersionValidationFailed {
+  state
+  errors {
+    ...ProcessingTimeoutError
+    ...UnexpectedProcessingError
+    ...McpFeatureCollectionValidationError
+    ...McpFeatureCollectionValidationArchiveError
+  }
+}
+
+fragment McpFeatureCollectionVersionValidationSuccess on McpFeatureCollectionVersionValidationSuccess {
+  state
+}
+
+fragment McpFeatureCollectionVersionPublishSuccess on McpFeatureCollectionVersionPublishSuccess {
+  state
+}
+
+fragment McpFeatureCollectionVersionPublishFailed on McpFeatureCollectionVersionPublishFailed {
+  state
+  errors {
+    ...UnexpectedProcessingError
+    ...ProcessingTimeoutError
+    ...ConcurrentOperationError
+    ...McpFeatureCollectionValidationError
+  }
+}
+
+fragment McpFeatureCollectionValidationError on McpFeatureCollectionValidationError {
+  collections {
+    mcpFeatureCollection {
+      id
+      name
+    }
+    entities {
+      errors {
+        ...McpFeatureCollectionValidationDocumentError
+        ...McpFeatureCollectionValidationEntityValidationError
+      }
+      ... on McpFeatureCollectionValidationPrompt {
+        name
+      }
+      ... on McpFeatureCollectionValidationTool {
+        name
+      }
+    }
+  }
+}
+
+fragment McpFeatureCollectionValidationDocumentError on McpFeatureCollectionValidationDocumentError {
+  code
+  message
+  path
+  locations {
+    column
+    line
+  }
+}
+
+fragment McpFeatureCollectionValidationEntityValidationError on McpFeatureCollectionValidationEntityValidationError {
+  message
+}
+
+fragment InvalidMcpFeatureCollectionArchiveError on InvalidMcpFeatureCollectionArchiveError {
+  message
+}
+
+fragment McpFeatureCollectionValidationArchiveError on McpFeatureCollectionValidationArchiveError {
   message
 }

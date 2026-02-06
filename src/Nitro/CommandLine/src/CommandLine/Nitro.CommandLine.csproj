@@ -25,6 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\HotChocolate\Adapters\src\Adapters.Mcp.Core\HotChocolate.Adapters.Mcp.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\HotChocolate\Adapters\src\Adapters.Mcp.Packaging\HotChocolate.Adapters.Mcp.Packaging.csproj" />
     <ProjectReference Include="..\..\..\..\HotChocolate\Adapters\src\Adapters.OpenApi.Core\HotChocolate.Adapters.OpenApi.Core.csproj" />
     <ProjectReference Include="..\..\..\..\HotChocolate\Adapters\src\Adapters.OpenApi.Packaging\HotChocolate.Adapters.OpenApi.Packaging.csproj" />
     <ProjectReference Include="..\..\..\..\HotChocolate\Fusion-vnext\src\Fusion.AspNetCore\HotChocolate.Fusion.AspNetCore.csproj" />

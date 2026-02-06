@@ -205,6 +205,67 @@ internal static class ConsoleHelpers
         }
     }
 
+    private static void PrintError(this IAnsiConsole console, IMcpFeatureCollectionValidationError error)
+    {
+        foreach (var collectionError in error.Collections)
+        {
+            var mcpFeatureCollection = collectionError.McpFeatureCollection;
+
+            console.WarningLine(
+                $"There were errors in the MCP Feature Collection '{mcpFeatureCollection?.Name.AsHighlight()}' [dim](ID: {mcpFeatureCollection?.Id})[/]");
+
+            var node = new Tree("");
+            foreach (var entity in collectionError.Entities)
+            {
+                var entityNode = node.AddNode(GetEntityNodeHeading(entity));
+
+                foreach (var entityError in entity.Errors)
+                {
+                    if (entityError is
+                        IOnClientVersionPublishUpdated_OnClientVersionPublishingUpdate_Deployment_Errors_Collections_Entities_Errors_McpFeatureCollectionValidationDocumentError
+                        documentError)
+                    {
+                        var errorLocation = string.Empty;
+                        if (documentError.Locations is { Count: > 0 } locations)
+                        {
+                            errorLocation = $"[grey]({locations[0].Line}:{locations[0].Column})[/]";
+                        }
+
+                        entityNode.AddNode($"{documentError.Message.EscapeMarkup()} {errorLocation}");
+                    }
+                    else if (entityError is
+                        IOnClientVersionPublishUpdated_OnClientVersionPublishingUpdate_Deployment_Errors_Collections_Entities_Errors_McpFeatureCollectionValidationEntityValidationError
+                        entityValidationError)
+                    {
+                        entityNode.AddNode(entityValidationError.Message.EscapeMarkup());
+                    }
+                    else
+                    {
+                        entityNode.AddNode("Unknown error type");
+                    }
+                }
+            }
+
+            console.Write(node);
+        }
+
+        static string GetEntityNodeHeading(
+            IOnClientVersionPublishUpdated_OnClientVersionPublishingUpdate_Deployment_Errors_Collections_Entities_1
+                entity)
+        {
+            var heading = entity switch
+            {
+                IOnClientVersionPublishUpdated_OnClientVersionPublishingUpdate_Deployment_Errors_Collections_Entities_McpFeatureCollectionValidationPrompt prompt
+                    => $"Prompt '{prompt.Name}'",
+                IOnClientVersionPublishUpdated_OnClientVersionPublishingUpdate_Deployment_Errors_Collections_Entities_McpFeatureCollectionValidationTool tool
+                    => $"Tool '{tool.Name}'",
+                _ => "Unknown entity type"
+            };
+
+            return $"[red]{heading}[/]";
+        }
+    }
+
     private static void PrintError(
         this IAnsiConsole console,
         IInvalidGraphQLSchemaError error)
@@ -224,6 +285,15 @@ internal static class ConsoleHelpers
     }
 
     private static void PrintInvalidOpenApiCollectionArchiveError(this IAnsiConsole console, string message)
+    {
+        console.WriteLine(
+            "The server received an invalid archive. "
+            + "This indicates a bug in the tooling. "
+            + "Please notify ChilliCream."
+            + "Error received: " + message);
+    }
+
+    private static void PrintInvalidMcpFeatureCollectionArchiveError(this IAnsiConsole console, string message)
     {
         console.WriteLine(
             "The server received an invalid archive. "
@@ -314,6 +384,18 @@ internal static class ConsoleHelpers
 
             case IOpenApiCollectionValidationArchiveError err:
                 ansiConsole.PrintInvalidOpenApiCollectionArchiveError(err.Message);
+                break;
+
+            case IMcpFeatureCollectionValidationError err:
+                ansiConsole.PrintError(err);
+                break;
+
+            case IInvalidMcpFeatureCollectionArchiveError err:
+                ansiConsole.PrintInvalidMcpFeatureCollectionArchiveError(err.Message);
+                break;
+
+            case IMcpFeatureCollectionValidationArchiveError err:
+                ansiConsole.PrintInvalidMcpFeatureCollectionArchiveError(err.Message);
                 break;
 
             case IError err:
